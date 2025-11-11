@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Search Routes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .table-container { margin-top: 30px; }
+        .form-container { margin-top: 30px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center text-primary mt-4">Find Your Route</h2>
+
+    <!-- Search Form -->
+    <div class="form-container shadow p-4 bg-white rounded">
+        <form method="GET" action="/home">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="from_city" id="from_city" class="form-control" placeholder="From City" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="to_city" id="to_city" class="form-control" placeholder="To City" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="departure_date" class="form-control" placeholder="Departure Date">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Search Routes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Table -->
+    <div class="table-container">
+        {% if routes %}
+        <div class="table-responsive shadow-sm bg-white p-3 rounded mt-4">
+            <table class="table table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Type</th>
+                        <th>Company</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in routes %}
+                    <tr>
+                        <td>{{ r.from_city }}</td>
+                        <td>{{ r.to_city }}</td>
+                        <td>{{ r.departure_time }}</td>
+                        <td>{{ r.arrival_time }}</td>
+                        <td>{{ r.transport_type }}</td>
+                        <td>
+                            {% if r.company_name %}
+                                <a href="{{ r.company_website }}" target="_blank">{{ r.company_name }}</a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td><a href="/book/{{ r.id }}" class="btn btn-success btn-sm">Book</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-center text-danger mt-4">No routes found. Try different cities or dates.</p>
+        {% endif %}
+    </div>
+</div>
+  
+
+<script>
+    // Optional: Autocomplete for cities
+    const cities = ["Khartoum","Omdurman","Port Sudan","El Obeid","Kassala","Nyala","Kadugli","Geneina","Al-Fashir","Atbara"];
+    function autocomplete(inp) {
+        // ... (same autocomplete JS as before)
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        autocomplete(document.getElementById("from_city"));
+        autocomplete(document.getElementById("to_city"));
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
